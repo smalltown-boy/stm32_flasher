@@ -52,6 +52,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.buttonAddFile.clicked.connect(self.on_addFirmware_clicked)
         self.buttonErase.clicked.connect(self.on_eraseMCU_clicked)
         self.buttonWriteFlash.clicked.connect(self.on_writeFirmware_clicked)
+        self.buttonClear.clicked.connect(self.on_clearLog_clicked)
 
     def on_connect_clicked(self):
         address = self.ipEdit.text().strip()
@@ -142,4 +143,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         percent = int((self.offset / len(self.firmware)) * 100)
         percent = min(percent, 100)
         self.progressBar.setValue(percent)
+        
+    def on_clearLog_clicked(self):
+        self.logBrowser.clear()
 
