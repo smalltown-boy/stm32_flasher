@@ -5,6 +5,7 @@ from network.udp_client import UdpClient
 from file.file_manager import FileManager
 from parser.data_parser import DataParser
 from crc.crc import CalcCRC
+from history.history_manager import HistoryManager
 
 from enum import Enum
 
@@ -21,10 +22,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         super().__init__()
         self.setupUi(self)
 
+        # Objects
         self.udp = UdpClient(self)
         self.parser = DataParser(self)
         self.file = FileManager(self, self.pathEdit)
         self.calc_crc = CalcCRC(self)
+        self.history = HistoryManager(self)
         
         # Variables
         self.offset = 0
@@ -53,6 +56,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.buttonErase.clicked.connect(self.on_eraseMCU_clicked)
         self.buttonWriteFlash.clicked.connect(self.on_writeFirmware_clicked)
         self.buttonClear.clicked.connect(self.on_clearLog_clicked)
+        
+        # 
+        self.history.attach_to_lineedit(self.ipEdit)
 
     def on_connect_clicked(self):
         address = self.ipEdit.text().strip()
@@ -63,6 +69,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         ip, port = address.split(":", 1)
         self.udp.open(ip, int(port))
+        
+        self.history.add_address(address)
+        self.history.refresh_completer()
 
     def on_addFirmware_clicked(self):
         self.firmware = self.file.open_file()
