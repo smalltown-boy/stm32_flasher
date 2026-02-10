@@ -126,7 +126,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def send_next_chunk(self):
         if self.offset >= len(self.firmware):
             self.logBrowser.append("Sending CRC...")
-            packet = b'\x01\xEE' + self.crc.to_bytes(2, 'big')
+            
+            if self.checkBox.isChecked():
+                packet = b'\x01\xEF' + self.crc.to_bytes(2, 'big')
+            else:
+                packet = b'\x01\xEE' + self.crc.to_bytes(2, 'big')
+                
             self.flash_state = FlashState.SEND_CRC
             self.udp.send(packet)
             return

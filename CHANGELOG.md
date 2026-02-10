@@ -2,6 +2,12 @@
 
 All project changes are documented here.
 
+## Version 0.5.1 (2026-02-10)
+
+### New features
+
+- The user can choose whether the loader will switch to **main** after the flashing procedure is completed
+
 ### Version 0.5.0 (2026-02-10)
 
 ### New Features
