@@ -2,9 +2,16 @@
 
 All project changes are documented here.
 
+### Version 0.5.0 (2026-02-10)
+
+### New Features
+
+- The connection button text now changes when the socket is opened
+- The socket open button now also serves as a socket close button
+
 ## Version 0.4.0 (2026-02-10)
 
-###Fixes
+### Fixes
 
 -Fixed a bug in the **save_history** method of the **HistoryManager** class
 that prevented user-entered connection addresses from being saved correctly

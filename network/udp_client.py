@@ -6,6 +6,9 @@ class UdpClient(QObject):
     log = pyqtSignal(str)
     dataReceived = pyqtSignal(bytes)
     error = pyqtSignal(str)
+    
+    connected = pyqtSignal()
+    disconnected = pyqtSignal()
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -19,7 +22,7 @@ class UdpClient(QObject):
 
         self.remote_ip = None
         self.remote_port = None
-
+        
     def open(self, ip: str, port: int) -> bool:
         host = QHostAddress()
         if not host.setAddress(ip):
@@ -30,7 +33,7 @@ class UdpClient(QObject):
             self.log.emit("Invalid port")
             return False
 
-        if self.socket.state() == QAbstractSocket.SocketState.BoundState:
+        if self.socket.state() != QAbstractSocket.SocketState.UnconnectedState:
             self.socket.close()
 
         if not self.socket.bind(QHostAddress.SpecialAddress.AnyIPv4, 0):
@@ -41,7 +44,9 @@ class UdpClient(QObject):
         self.remote_port = port
 
         self.log.emit("UDP socket opened")
+        self.connected.emit() 
         return True
+
 
     def send(self, data: bytes, timeout_ms=35000):
         if self.socket.state() != QAbstractSocket.SocketState.BoundState:
@@ -60,3 +65,17 @@ class UdpClient(QObject):
 
     def _on_timeout(self):
         self.error.emit("UDP timeout")
+        
+
+    def is_open(self) -> bool:
+        return self.socket.state() == QAbstractSocket.SocketState.BoundState
+
+
+    def close(self) -> bool:
+        if self.socket.state() != QAbstractSocket.SocketState.UnconnectedState:
+            self.socket.close()
+            self.log.emit("UDP socket closed")
+            self.disconnected.emit()
+            return True
+        return False
+

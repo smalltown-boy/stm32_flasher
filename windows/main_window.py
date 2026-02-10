@@ -57,22 +57,41 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.buttonWriteFlash.clicked.connect(self.on_writeFirmware_clicked)
         self.buttonClear.clicked.connect(self.on_clearLog_clicked)
         
-        # 
+        # Custom lineEdit
         self.history.attach_to_lineedit(self.ipEdit)
+        
+        #
+        self.udp.connected.connect(self.on_udp_connected)
+        self.udp.disconnected.connect(self.on_udp_disconnected)
+
 
     def on_connect_clicked(self):
-        address = self.ipEdit.text().strip()
+        if self.udp.is_open():
+            self.buttonConnect.setEnabled(False)
+            self.logBrowser.append("Closing UDP socket...")
+            self.udp.close()
+            return
 
+        address = self.ipEdit.text().strip()
         if ":" not in address:
             self.logBrowser.append("Invalid format (ip:port)")
             return
 
         ip, port = address.split(":", 1)
-        self.udp.open(ip, int(port))
-        
-        self.history.add_address(address)
-        self.history.save_history()
-        self.history.refresh_completer()
+
+        try:
+            port = int(port)
+        except ValueError:
+            self.logBrowser.append("Invalid port")
+            return
+
+        self.buttonConnect.setEnabled(False)
+        self.logBrowser.append("Opening UDP socket...")
+
+        if self.udp.open(ip, port):
+            self.history.add_address(address)
+            self.history.save_history()
+            self.history.refresh_completer()
 
     def on_addFirmware_clicked(self):
         self.firmware = self.file.open_file()
@@ -156,4 +175,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         
     def on_clearLog_clicked(self):
         self.logBrowser.clear()
+        
+    def on_udp_connected(self):
+        self.buttonConnect.setText("Disconnect")
+        self.buttonConnect.setEnabled(True)
+
+    def on_udp_disconnected(self):
+        self.buttonConnect.setText("Connect")
+        self.buttonConnect.setEnabled(True)
+
+
 
