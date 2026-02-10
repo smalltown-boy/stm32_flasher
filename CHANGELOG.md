@@ -2,6 +2,16 @@
 
 All project changes are documented here.
 
+## Version 0.4.0 (2026-02-10)
+
+###Fixes
+
+-Fixed a bug in the **save_history** method of the **HistoryManager** class
+that prevented user-entered connection addresses from being saved correctly
+
+-Added a call to **self.history.save_history()** in the
+**on_connect_clicked** event of the **MainWindow** class
+
 ## Version 0.3.0 (2026-02-10)
 
 ### Changes

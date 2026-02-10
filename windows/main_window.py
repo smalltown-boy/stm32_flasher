@@ -71,6 +71,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.udp.open(ip, int(port))
         
         self.history.add_address(address)
+        self.history.save_history()
         self.history.refresh_completer()
 
     def on_addFirmware_clicked(self):
