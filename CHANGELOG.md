@@ -2,6 +2,12 @@
 
 All project changes are documented here.
 
+## Version 0.5.2 (2026-02-11)
+
+## Fixes
+
+- Fixed the font size for the parameter responsible for launching the main program after flashing the microcontroller
+
 ## Version 0.5.1 (2026-02-10)
 
 ### New features

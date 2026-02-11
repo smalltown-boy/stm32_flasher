@@ -46,7 +46,7 @@ class Ui_MainWindow(object):
         self.groupBox_2.setGeometry(QtCore.QRect(10, 80, 731, 91))
         self.groupBox_2.setObjectName("groupBox_2")
         self.checkBox = QtWidgets.QCheckBox(parent=self.groupBox_2)
-        self.checkBox.setGeometry(QtCore.QRect(10, 60, 181, 17))
+        self.checkBox.setGeometry(QtCore.QRect(10, 60, 211, 23))
         self.checkBox.setObjectName("checkBox")
         self.label = QtWidgets.QLabel(parent=self.groupBox_2)
         self.label.setGeometry(QtCore.QRect(195, 24, 20, 16))
