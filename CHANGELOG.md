@@ -2,6 +2,14 @@
 
 All project changes are documented here.
 
+## Version 0.5.3 (2026-02-11)
+
+## Fixes
+
+- Fixed the program version number on the main window (ui_main.py)
+- Added the README.md file
+- Added the LICENCE.md file
+
 ## Version 0.5.2 (2026-02-11)
 
 ## Fixes
