@@ -2,6 +2,17 @@
 
 All project changes are documented here.
 
+## Version 0.6.1 (2026-02-12)
+
+### In development
+
+- Added the settings window form **ui_preferences.py**
+
+### Fixes
+
+-Updated the program version in the main form
+-Fixed sections in the **CHANGELOG.md** and **CHANGELOG.ru.md** files
+
 ## Version 0.6.0 (2026-02-12)
 
 ### New features
@@ -10,27 +21,27 @@ All project changes are documented here.
 - Implemented display of brief file information
 - For the **.elf** format, implemented checks for compliance with start and end addresses, as well as a check for exceeding the limits of available flash memory
 
-## Fixes
+### Fixes
 
 - Updated the program version in the main form
 
 ## Version 0.5.4 (2026-02-12)
 
-## In development
+### In development
 
 - Created the **firmware** directory with the **file_manager.py** file
 - Created an abstract class **FirmwareManager** to work with different types of firmware
 - Created a directory for temporary files: **temp**
 - Added support for **.elf** and **.hex** formats in the file-opening function
 
-## Fixes
+### Fixes
 
 - Changed the name of the firmware file opening button
 - Updated the program version in the main form
 
 ## Version 0.5.3 (2026-02-11)
 
-## Fixes
+### Fixes
 
 - Fixed the program version number on the main window (ui_main.py)
 - Added the README.md file
@@ -38,7 +49,7 @@ All project changes are documented here.
 
 ## Version 0.5.2 (2026-02-11)
 
-## Fixes
+### Fixes
 
 - Fixed the font size for the parameter responsible for launching the main program after flashing the microcontroller
 
