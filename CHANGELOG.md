@@ -2,6 +2,18 @@
 
 All project changes are documented here.
 
+## Version 0.6.0 (2026-02-12)
+
+### New features
+
+- Added support for **.elf** and **.hex** formats
+- Implemented display of brief file information
+- For the **.elf** format, implemented checks for compliance with start and end addresses, as well as a check for exceeding the limits of available flash memory
+
+## Fixes
+
+- Updated the program version in the main form
+
 ## Version 0.5.4 (2026-02-12)
 
 ## In development

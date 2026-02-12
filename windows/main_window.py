@@ -6,6 +6,7 @@ from file.file_manager import FileManager
 from parser.data_parser import DataParser
 from crc.crc import CalcCRC
 from history.history_manager import HistoryManager
+from firmware.firmware_manager import FirmwareManager
 
 from enum import Enum
 
@@ -94,18 +95,33 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.history.refresh_completer()
 
     def on_addFirmware_clicked(self):
-        self.firmware = self.file.open_file()
-        if self.firmware:
-            # Здесь должна происходить конвертация файла
-            
-            #
-            self.crc = self.calc_crc.crc16(self.firmware)
-            self.logBrowser.append("Firmware file opened")
-            self.logBrowser.append(f"CRC16 : 0x{self.crc:04X}")
-            self.firmware_loaded = True
-        else:
+        path = self.file.open_file()
+        
+        if not path:
             self.firmware_loaded = False
-
+            return
+            
+        try:
+            manager = FirmwareManager.create(path)
+            self.firmware = manager.convert_to_binary()
+            sp, reset = manager.validate_stm32_vector_table()
+            
+            self.crc = self.calc_crc.crc16(self.firmware)
+            
+            self.logBrowser.append("Firmware loaded successfully")
+            self.logBrowser.append(f"Base address : 0x{manager.base_address:08X}")
+            self.logBrowser.append(f"Size         : {len(self.firmware)} bytes")
+            self.logBrowser.append(f"SP           : 0x{sp:08X}")
+            self.logBrowser.append(f"ResetHandler : 0x{reset:08X}")
+            self.logBrowser.append(f"CRC16        : 0x{self.crc:04X}")
+            self.logBrowser.append(f"                                            ")
+            
+            self.firmware_loaded = True
+            
+        except Exception as e:
+            self.logBrowser.append(f"Firmware error: {str(e)}")
+            self.firmware_loaded = False
+            
     def on_eraseMCU_clicked(self):
         self.logBrowser.append("Sending chip erase command...")
         self.waiting_flash_ready = True

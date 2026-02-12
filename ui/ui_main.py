@@ -113,7 +113,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "STM32 Flasher v0.5.4"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "STM32 Flasher v0.6.0"))
         self.groupBox.setTitle(_translate("MainWindow", "Net settings"))
         self.label_ip_port.setText(_translate("MainWindow", "IP:Port"))
         self.buttonConnect.setText(_translate("MainWindow", "Connect"))

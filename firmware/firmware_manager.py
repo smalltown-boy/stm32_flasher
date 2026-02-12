@@ -16,7 +16,7 @@ class FirmwareManager(ABC):
         pass
         
     @staticmethod
-    def create(path: str):
+    def create(path: str):    
         ext = Path(path).suffix.lower()
 
         if ext == ".bin":
@@ -49,7 +49,7 @@ class FirmwareManager(ABC):
         return sp, reset
         
     
-class BinFile(FirmwareFile):
+class BinFile(FirmwareManager):
     def convert_to_binary(self) -> bytes:
         with open(self.firmware_path, "rb") as f:
             self.binary = f.read()
@@ -58,7 +58,7 @@ class BinFile(FirmwareFile):
         return self.binary
         
 class HexFile(FirmwareManager):
-    def convert(self) -> bytes:
+    def convert_to_binary(self) -> bytes:
         ih = IntelHex(self.firmware_path)
 
         start = ih.minaddr()
@@ -81,33 +81,51 @@ class HexFile(FirmwareManager):
         return self.binary
 
 class ElfFile(FirmwareManager):
-    def convert(self) -> bytes:
+    def convert_to_binary(self) -> bytes:
         segments = []
+
+        FLASH_START = 0x08000000
+        FLASH_END   = 0x08080000   
 
         with open(self.firmware_path, "rb") as f:
             elf = ELFFile(f)
 
             for segment in elf.iter_segments():
-                if segment['p_type'] == 'PT_LOAD':
-                    addr = segment['p_paddr']
-                    data = segment.data()
+                if segment['p_type'] != 'PT_LOAD':
+                    continue
+
+                addr = segment['p_paddr']
+                data = segment.data()
+
+                # Нам нужен отлько flash сегмент
+                if FLASH_START <= addr < FLASH_END:
                     segments.append((addr, data))
 
         if not segments:
-            raise ValueError("No loadable segments found")
+            raise ValueError("No FLASH segments found in ELF")
 
         segments.sort(key=lambda x: x[0])
 
         start = segments[0][0]
+        end = max(addr + len(data) for addr, data in segments)
 
+        # Защита от переполнения flash в принципе
+        if end > FLASH_END:
+            raise ValueError("Firmware exceeds FLASH size")
+            
         if start != FLASH_BASE:
             raise ValueError(
-                f"ELF base address 0x{start:08X} "
-                f"does not match expected 0x{FLASH_BASE:08X}"
-            )
-
-        end = max(addr + len(data) for addr, data in segments)
+            f"ELF base address 0x{start:08X} "
+            f"does not match expected 0x{FLASH_BASE:08X}"
+        )
+  
         size = end - start
+
+        # Защита от переполнения. 480кБ - максимально допустимый размер загрузчика при использоваинии
+        # моего бутлоадера
+        MAX_FW_SIZE = 480 * 1024
+        if size > MAX_FW_SIZE:
+            raise ValueError(f"Firmware too large: {size} bytes")
 
         binary = bytearray([0xFF] * size)
 
@@ -119,3 +137,4 @@ class ElfFile(FirmwareManager):
         self.base_address = start
 
         return self.binary
+
