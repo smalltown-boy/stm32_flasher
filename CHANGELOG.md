@@ -2,6 +2,20 @@
 
 All project changes are documented here.
 
+## Version 0.6.3 (2026-02-12)
+
+### New features
+
+- Program settings are saved to an external **.ini** file  
+- Program settings are loaded from the **.ini** file when the application starts  
+- Automatic search for the `arm-none-eabi-objcopy` tool in the system **PATH** variable has been implemented  
+- Search for `arm-none-eabi-objcopy` is only available after the checkbox is activated  
+
+### Fixes
+
+- Fixed an issue where clicking the **Search** button caused settings to be saved
+- Updated the program version in the main form
+
 ## Version 0.6.2 (2026-02-12)
 
 ### New features

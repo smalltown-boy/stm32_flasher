@@ -25,7 +25,7 @@ class AppSettings(QObject):
         self.objcopy_path = self.settings.value(self.OBJCOPY_PATH, "", type=str)
         self.addr_saving = bool(self.settings.value(self.SAVING_ADDRESS, False, type=bool))
 
-    def save(self):
+    def save(self):        
         self.settings.setValue(self.FLASH_START, self.flash_start_addr)
         self.settings.setValue(self.FLASH_SIZE, self.flash_size)
         self.settings.setValue(self.RAM_START, self.ram_start_addr)
