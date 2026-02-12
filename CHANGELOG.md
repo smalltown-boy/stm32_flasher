@@ -2,6 +2,17 @@
 
 All project changes are documented here.
 
+## Version 0.6.2 (2026-02-12)
+
+### New features
+
+- Implemented a mechanism for creating a settings file
+- Implemented a mechanism for reading settings from a file
+
+### Fixes
+
+- Updated the program version on the main form
+
 ## Version 0.6.1 (2026-02-12)
 
 ### In development

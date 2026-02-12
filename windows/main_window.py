@@ -7,6 +7,8 @@ from parser.data_parser import DataParser
 from crc.crc import CalcCRC
 from history.history_manager import HistoryManager
 from firmware.firmware_manager import FirmwareManager
+from windows.preferences import PreferencesDialog
+from settings.settings import AppSettings
 
 from enum import Enum
 
@@ -29,6 +31,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.file = FileManager(self, self.pathEdit)
         self.calc_crc = CalcCRC(self)
         self.history = HistoryManager(self)
+        self.settings = AppSettings()
+        self.pref_dialog = PreferencesDialog(self.settings)
         
         # Variables
         self.offset = 0
@@ -58,12 +62,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.buttonWriteFlash.clicked.connect(self.on_writeFirmware_clicked)
         self.buttonClear.clicked.connect(self.on_clearLog_clicked)
         
+        # Context menu
+        self.actionPreferences.triggered.connect(self.on_open_preferences)
+        
         # Custom lineEdit
         self.history.attach_to_lineedit(self.ipEdit)
         
-        #
+        # Signals
         self.udp.connected.connect(self.on_udp_connected)
         self.udp.disconnected.connect(self.on_udp_disconnected)
+        self.pref_dialog.settings_saved.connect(self.on_settings_saved)
 
 
     def on_connect_clicked(self):
@@ -207,6 +215,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def on_udp_disconnected(self):
         self.buttonConnect.setText("Connect")
         self.buttonConnect.setEnabled(True)
-
+        
+    def on_open_preferences(self):
+        self.pref_dialog.exec()
+        
+    def on_settings_saved(self):
+        self.pref_dialog.close()
+        self.logBrowser.append("Settings saved!")
 
 

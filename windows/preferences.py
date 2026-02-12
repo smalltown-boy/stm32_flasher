@@ -1,0 +1,33 @@
+from PyQt6.QtWidgets import QDialog
+from PyQt6.QtCore import QObject, pyqtSignal
+from ui.ui_preferences import Ui_Dialog
+from settings.settings import AppSettings
+
+class PreferencesDialog(QDialog, Ui_Dialog):
+    # Signals
+    settings_saved = pyqtSignal()
+
+    def __init__(self, settings):
+        super().__init__()
+        self.setupUi(self)
+        
+        self.settings = settings
+        
+        # Buttons
+        self.buttonSave.clicked.connect(self.on_save_settings_clicked)
+        self.buttonSearch.clicked.connect(self.on_save_settings_clicked)
+        
+        # Data
+        self.lineFlashStart.setText(self.settings.flash_start_addr)
+        self.lineFlashSize.setText(str(self.settings.flash_size))
+        self.lineRamStart.setText(self.settings.ram_start_addr)
+        self.lineRamSize.setText(str(self.settings.ram_size))
+        self.lineObjcopyPath.setText(self.settings.objcopy_path)
+        self.checkObjcopy.setChecked(self.settings.objcopy_use)
+        self.checkHints.setChecked(self.settings.addr_saving)
+        
+    def on_save_settings_clicked(self):
+        self.settings_saved.emit()
+        
+    def on_search_objcopy_clicked(self):
+        pass
