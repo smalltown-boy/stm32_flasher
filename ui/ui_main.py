@@ -113,7 +113,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "STM32 Flasher v0.5.3"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "STM32 Flasher v0.5.4"))
         self.groupBox.setTitle(_translate("MainWindow", "Net settings"))
         self.label_ip_port.setText(_translate("MainWindow", "IP:Port"))
         self.buttonConnect.setText(_translate("MainWindow", "Connect"))
@@ -121,7 +121,7 @@ class Ui_MainWindow(object):
         self.checkBox.setText(_translate("MainWindow", "Jump to main after programming"))
         self.label.setText(_translate("MainWindow", "File"))
         self.label_2.setText(_translate("MainWindow", "File:"))
-        self.buttonAddFile.setText(_translate("MainWindow", "Add *bin file"))
+        self.buttonAddFile.setText(_translate("MainWindow", "Open file"))
         self.buttonErase.setText(_translate("MainWindow", "Erase flash"))
         self.buttonWriteFlash.setText(_translate("MainWindow", "Write flash"))
         self.groupBox_4.setTitle(_translate("MainWindow", "Log"))

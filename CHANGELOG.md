@@ -2,6 +2,20 @@
 
 All project changes are documented here.
 
+## Version 0.5.4 (2026-02-12)
+
+## In development
+
+- Created the **firmware** directory with the **file_manager.py** file
+- Created an abstract class **FirmwareManager** to work with different types of firmware
+- Created a directory for temporary files: **temp**
+- Added support for **.elf** and **.hex** formats in the file-opening function
+
+## Fixes
+
+- Changed the name of the firmware file opening button
+- Updated the program version in the main form
+
 ## Version 0.5.3 (2026-02-11)
 
 ## Fixes

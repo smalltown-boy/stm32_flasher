@@ -10,7 +10,7 @@ class FileManager(QObject):
         self.path_edit = path_edit
 
     def open_file(self) -> bytes | None:
-        firmware_path, _ = QFileDialog.getOpenFileName(self.parent, "Открыть BIN-файл", "", "BIN-файлы (*.bin)")
+        firmware_path, _ = QFileDialog.getOpenFileName(self.parent, "Open firmware file", "", "files (*.bin *.hex *.elf)")
         
         if not firmware_path:
             return None

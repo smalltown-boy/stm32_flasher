@@ -96,6 +96,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def on_addFirmware_clicked(self):
         self.firmware = self.file.open_file()
         if self.firmware:
+            # Здесь должна происходить конвертация файла
+            
+            #
             self.crc = self.calc_crc.crc16(self.firmware)
             self.logBrowser.append("Firmware file opened")
             self.logBrowser.append(f"CRC16 : 0x{self.crc:04X}")
