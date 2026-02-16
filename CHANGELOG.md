@@ -2,6 +2,18 @@
 
 All project changes are documented here.
 
+## Version 0.6.4 (2026-02-16)
+
+### In development
+
+- Developing a mechanism to convert an ELF file to BIN using `objcopy`
+- Implementing the impact of saved settings on program operation
+
+### Fixes
+
+- Updated the program version on the main form
+- After saving the settings, they are updated in the program code
+
 ## Version 0.6.3 (2026-02-12)
 
 ### New features

@@ -34,6 +34,29 @@ class AppSettings(QObject):
         self.settings.setValue(self.OBJCOPY_PATH, self.objcopy_path)
         self.settings.setValue(self.SAVING_ADDRESS, self.addr_saving)
         self.settings.sync()
+        #
+        self.load_settings()
+        
+    @property
+    def flash_start(self) -> int:
+        return int(self.flash_start_addr, 16)
+
+    @property
+    def flash_end(self) -> int:
+        return self.flash_start + self.flash_size * 1024
+
+    @property
+    def ram_start(self) -> int:
+        return int(self.ram_start_addr, 16)
+
+    @property
+    def ram_end(self) -> int:
+        return self.ram_start + self.ram_size * 1024
+        
+    @property
+    def objcopy_use(self) -> bool:
+        return self.objcopy_use
+
 
         
         

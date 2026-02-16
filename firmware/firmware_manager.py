@@ -3,11 +3,10 @@ from pathlib import Path
 from intelhex import IntelHex
 from elftools.elf.elffile import ELFFile
 
-FLASH_BASE = 0x08008000
-
 class FirmwareManager(ABC):
-    def __init__(self, firmware_path: str):
+    def __init__(self, firmware_path: str, settings):
         self.firmware_path = firmware_path
+        self.settings = settings
         self.base_address = None
         self.binary = None
         
@@ -16,34 +15,35 @@ class FirmwareManager(ABC):
         pass
         
     @staticmethod
-    def create(path: str):    
+    def create(path: str, settings):    
         ext = Path(path).suffix.lower()
 
         if ext == ".bin":
-            return BinFile(path)
+            return BinFile(path, settings)
         elif ext == ".hex":
-            return HexFile(path)
+            return HexFile(path, settings)
         elif ext == ".elf":
-            return ElfFile(path)
+            return ElfFile(path, settings)
         else:
             raise ValueError("Unsupported firmware format")
             
     def validate_stm32_vector_table(self):
-        """
-        Что мы вообще ищем:
-        1. Первое слово — SP в RAM (0x200xxxxx)
-        2. Второе словоd — Reset_Handler во FLASH
-        """
         if len(self.binary) < 8:
             raise ValueError("Firmware too small")
 
         sp = int.from_bytes(self.binary[0:4], "little")
         reset = int.from_bytes(self.binary[4:8], "little")
+        
+        ram_start = self.settings.ram_start
+        ram_end = self.settings.ram_end
 
-        if not (0x20000000 <= sp <= 0x20050000):
+        flash_start = self.settings.flash_start
+        flash_end = self.settings.flash_end
+
+        if not (ram_start <= sp <= ram_end):
             raise ValueError(f"Invalid Stack Pointer: 0x{sp:08X}")
 
-        if not (FLASH_BASE <= reset <= 0x08100000):
+        if not (flash_start <= reset <= flash_end):
             raise ValueError(f"Invalid Reset_Handler: 0x{reset:08X}")
 
         return sp, reset
@@ -54,7 +54,7 @@ class BinFile(FirmwareManager):
         with open(self.firmware_path, "rb") as f:
             self.binary = f.read()
 
-        self.base_address = FLASH_BASE
+        self.base_address = self.settings.flash_start
         return self.binary
         
 class HexFile(FirmwareManager):
@@ -64,7 +64,7 @@ class HexFile(FirmwareManager):
         start = ih.minaddr()
         end = ih.maxaddr()
 
-        if start != FLASH_BASE:
+        if start != self.settings.flash_start:
             raise ValueError(
                 f"HEX base address 0x{start:08X} "
                 f"does not match expected 0x{FLASH_BASE:08X}"
@@ -84,9 +84,10 @@ class ElfFile(FirmwareManager):
     def convert_to_binary(self) -> bytes:
         segments = []
 
-        FLASH_START = 0x08000000
-        FLASH_END   = 0x08080000   
-
+        flash_start = self.settings.flash_start
+        flash_end = self.settings.flash_end
+        max_fw_size = self.settings.flash_size * 1024
+  
         with open(self.firmware_path, "rb") as f:
             elf = ELFFile(f)
 
@@ -98,7 +99,7 @@ class ElfFile(FirmwareManager):
                 data = segment.data()
 
                 # Нам нужен отлько flash сегмент
-                if FLASH_START <= addr < FLASH_END:
+                if flash_start <= addr < flash_end:
                     segments.append((addr, data))
 
         if not segments:
@@ -110,10 +111,10 @@ class ElfFile(FirmwareManager):
         end = max(addr + len(data) for addr, data in segments)
 
         # Защита от переполнения flash в принципе
-        if end > FLASH_END:
+        if end > flash_end:
             raise ValueError("Firmware exceeds FLASH size")
             
-        if start != FLASH_BASE:
+        if start != flash_start:
             raise ValueError(
             f"ELF base address 0x{start:08X} "
             f"does not match expected 0x{FLASH_BASE:08X}"
@@ -123,8 +124,7 @@ class ElfFile(FirmwareManager):
 
         # Защита от переполнения. 480кБ - максимально допустимый размер загрузчика при использоваинии
         # моего бутлоадера
-        MAX_FW_SIZE = 480 * 1024
-        if size > MAX_FW_SIZE:
+        if size > max_fw_size:
             raise ValueError(f"Firmware too large: {size} bytes")
 
         binary = bytearray([0xFF] * size)
