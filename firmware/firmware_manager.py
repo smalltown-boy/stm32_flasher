@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
 from intelhex import IntelHex
+import subprocess
+import tempfile
 from elftools.elf.elffile import ELFFile
 
 class FirmwareManager(ABC):
@@ -82,6 +84,75 @@ class HexFile(FirmwareManager):
 
 class ElfFile(FirmwareManager):
     def convert_to_binary(self) -> bytes:
+        if self.settings.objcopy_use:
+            return self.convert_with_objcopy()
+        else:
+            return self.convert_standart()
+        
+    def convert_with_objcopy(self) -> bytes:
+        objcopy_path = self.settings.objcopy_path
+        
+        if not objcopy_path:
+            raise ValueError("Objcopy path not set")
+
+        if not Path(objcopy_path).exists():
+            raise FileNotFoundError("Objcopy executable not found")
+        
+        flash_start = self.settings.flash_start
+        flash_end = self.settings.flash_end
+
+        elf_path = Path(self.firmware_path)
+        
+        with tempfile.NamedTemporaryFile(suffix=".bin", delete=False) as tmp:
+            bin_path = Path(tmp.name)
+
+        cmd = [
+            objcopy_path,
+            "-O", "binary",
+            str(elf_path),
+            str(bin_path)
+        ]
+
+        try:
+            result = subprocess.run(cmd, check=True, capture_output=True, text=True)
+
+            self.objcopy_cmd = " ".join(cmd)
+            self.objcopy_returncode = result.returncode
+            self.objcopy_stdout = result.stdout or ""
+            self.objcopy_stderr = result.stderr or ""
+
+        except subprocess.CalledProcessError as e:
+            #stderr = e.stderr.decode(errors='ignore') if e.stderr else ""
+            #stdout = e.stdout.decode(errors='ignore') if e.stdout else ""
+            
+            stderr = e.stderr or ""
+            stdout = e.stdout or ""
+
+            raise RuntimeError(
+                f"Objcopy failed\nSTDERR:\n{stderr}\nSTDOUT:\n{stdout}"
+            )
+        
+        # Логи. Юзер всё же должен увидеть разницу        
+        self.objcopy_stdout = result.stdout
+        self.objcopy_stderr = result.stderr
+
+        # читаем результат
+        with open(bin_path, "rb") as f:
+            binary = f.read()
+
+        # проверка размера
+        if len(binary) > (flash_end - flash_start):
+            raise ValueError("Firmware exceeds FLASH size")
+
+        self.binary = binary
+        self.base_address = flash_start
+
+        # можно дополнительно проверить векторную таблицу
+        self.validate_stm32_vector_table()
+
+        return self.binary
+
+    def convert_standart(self) -> bytes:
         segments = []
 
         flash_start = self.settings.flash_start
@@ -117,7 +188,7 @@ class ElfFile(FirmwareManager):
         if start != flash_start:
             raise ValueError(
             f"ELF base address 0x{start:08X} "
-            f"does not match expected 0x{FLASH_BASE:08X}"
+            f"does not match expected 0x{flash_start:08X}"
         )
   
         size = end - start
@@ -137,4 +208,3 @@ class ElfFile(FirmwareManager):
         self.base_address = start
 
         return self.binary
-

@@ -110,10 +110,31 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             return
             
         try:
-            manager = FirmwareManager.create(path)
+            manager = FirmwareManager.create(path, self.settings)
             self.firmware = manager.convert_to_binary()
-            sp, reset = manager.validate_stm32_vector_table()
             
+            if self.settings.objcopy_use:
+                if hasattr(manager, "objcopy_cmd"):
+                    self.logBrowser.append(
+                        f"<span style='color:gray;'>[OBJCOPY CMD]</span><br>{manager.objcopy_cmd}"
+                    )
+
+                if hasattr(manager, "objcopy_returncode"):
+                    self.logBrowser.append(
+                        f"<span style='color:gray;'>[OBJCOPY RETURN CODE]</span> {manager.objcopy_returncode}"
+                    )
+
+                if hasattr(manager, "objcopy_stdout"):
+                    self.logBrowser.append(
+                        f"<span style='color:gray;'>[OBJCOPY STDOUT]</span><br>{manager.objcopy_stdout or '(empty)'}"
+                    )
+
+                if hasattr(manager, "objcopy_stderr"):
+                    self.logBrowser.append(
+                        f"<span style='color:orange;'>[OBJCOPY STDERR]</span><br>{manager.objcopy_stderr or '(empty)'}"
+                    )
+            
+            sp, reset = manager.validate_stm32_vector_table()
             self.crc = self.calc_crc.crc16(self.firmware)
             
             self.logBrowser.append("Firmware loaded successfully")

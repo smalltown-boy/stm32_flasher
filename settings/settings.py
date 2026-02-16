@@ -53,9 +53,6 @@ class AppSettings(QObject):
     def ram_end(self) -> int:
         return self.ram_start + self.ram_size * 1024
         
-    @property
-    def objcopy_use(self) -> bool:
-        return self.objcopy_use
 
 
         

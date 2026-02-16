@@ -2,6 +2,19 @@
 
 All project changes are documented here.
 
+## Version 0.7.0 (2026-02-16)
+
+### New features
+
+- Implemented conversion of .elf file to .bin using `arm-none-eabi-objcopy`
+- Implemented output of debug information when using `arm-none-eabi-objcopy`
+- Implemented error checking (empty path to `arm-none-eabi-objcopy`, etc.)
+
+### Fixes
+
+- Updated the program version on the main form
+- Removed `pycache` directories
+
 ## Version 0.6.4 (2026-02-16)
 
 ### In development
