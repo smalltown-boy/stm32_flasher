@@ -2,7 +2,23 @@
 
 All project changes are documented here.
 
-## Version 0.7.1 (2026‑02‑17)
+## Version 0.7.2 (2026-02-17)
+
+### New features
+
+- Implemented the profile manager closing function.
+- Implemented the profile deletion function.
+
+### In development
+
+- Separating general settings from settings for a specific microcontroller.
+
+### Fixes
+
+- Updated the program version on the main form.
+- Fixed an issue where the profile list was not updating in the tableView and comboBox.
+
+## Version 0.7.1 (2026-02-17)
 
 ### New features
 

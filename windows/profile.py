@@ -30,6 +30,10 @@ class ProfilesDialog(QDialog, Ui_Dialog):
         self.tableView.clicked.connect(self.on_row_clicked)
         self.buttonAddProfile.clicked.connect(self.on_add_profile_clicked)
         
+        # Buttons
+        self.buttonClose.clicked.connect(self.on_close_clicked)
+        self.buttonDeleteProfile.clicked.connect(self.on_delete_clicked)
+        
     def clear_profile_fields(self):
         self.lineAddName.clear()
         self.lineAddFlashStart.clear()
@@ -38,7 +42,6 @@ class ProfilesDialog(QDialog, Ui_Dialog):
         self.lineAddRamSize.clear()
 
     def on_add_profile_clicked(self):
-
         profile_name = self.lineAddName.text().strip()
         flash_start_addr = self.lineAddFlashStart.text().strip()
         flash_size = self.lineAddFlashSize.text().strip()
@@ -75,6 +78,8 @@ class ProfilesDialog(QDialog, Ui_Dialog):
         self.lineAddRamSize.clear()
 
         self.check_profiles()
+        
+        self.reload_profile.emit()
 
     def check_profiles(self):
         model = QStandardItemModel()
@@ -148,7 +153,19 @@ class ProfilesDialog(QDialog, Ui_Dialog):
             self.lineAddRamStart.setText(str(ram_start))
             self.lineAddRamSize.setText(str(ram_size))
             
-            self.reload_profile.emit()
-            
     def on_delete_clicked(self):
-        pass
+        index = self.tableView.currentIndex()
+        item = self.tableView.model().itemFromIndex(index)
+        
+        if not item:
+            return
+            
+        file_name = item.text()
+        file_path = self.profiles_dir / file_name
+        file_path.unlink()
+        
+        self.check_profiles()
+        self.reload_profile.emit()
+        
+    def on_close_clicked(self):
+        self.close()
