@@ -126,6 +126,8 @@ class Ui_MainWindow(object):
         font.setPointSize(10)
         self.actionPreferences.setFont(font)
         self.actionPreferences.setObjectName("actionPreferences")
+        self.actionHexViewer = QtGui.QAction(parent=MainWindow)
+        self.actionHexViewer.setObjectName("actionHexViewer")
         self.menuSettings.addAction(self.actionPreferences)
         self.menubar.addAction(self.menuSettings.menuAction())
 
@@ -134,7 +136,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "STM32 Flasher v0.7.0"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "STM32 Flasher v0.7.1"))
         self.groupBox.setTitle(_translate("MainWindow", "Net settings"))
         self.label_ip_port.setText(_translate("MainWindow", "IP:Port"))
         self.buttonConnect.setText(_translate("MainWindow", "Connect"))
@@ -150,3 +152,4 @@ class Ui_MainWindow(object):
         self.groupBox_3.setTitle(_translate("MainWindow", "Progress"))
         self.menuSettings.setTitle(_translate("MainWindow", "Settings"))
         self.actionPreferences.setText(_translate("MainWindow", "Preferences"))
+        self.actionHexViewer.setText(_translate("MainWindow", "HEX Viewer"))

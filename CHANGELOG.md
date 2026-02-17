@@ -2,6 +2,20 @@
 
 All project changes are documented here.
 
+## Version 0.7.1 (2026‑02‑17)
+
+### New features
+
+- Implemented a profile manager for different STM32 microcontroller models.
+
+### In development
+
+- Separating general settings from settings for a specific microcontroller.
+
+### Fixes
+
+- Updated the program version on the main form.
+
 ## Version 0.7.0 (2026-02-16)
 
 ### New features
