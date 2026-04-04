@@ -22,7 +22,14 @@
 Подробная иснструкция по использованию программы находится в Wiki проекта.
 
 ### Ссылки
-Репозиторий загрузчика: https://github.com/smalltown-boy/bootloader_stm32f407  
+Репозиторий загрузчика: https://github.com/smalltown-boy/bootloader_stm32f407 
+
+### Видео
+### Демонстрация работы (v0.1.0)
+[![Watch Demo](https://img.youtube.com/vi/TCgXFpC7HS4/0.jpg)](https://www.youtube.com/watch?v=TCgXFpC7HS4)
+
+### Краткая демонстрация (v0.5.3)
+[![Demo](https://img.youtube.com/vi/nywHxAofsHw/0.jpg)](https://www.youtube.com/watch?v=nywHxAofsHw)
 
 
 ## EN
@@ -47,3 +54,10 @@ A detailed user guide is available in the project Wiki.
 
 ### Links
 Bootloader repository: https://github.com/smalltown-boy/bootloader_stm32f407
+
+### Video
+### Full Demo (v0.1.0)
+[![Watch Demo](https://img.youtube.com/vi/TCgXFpC7HS4/0.jpg)](https://www.youtube.com/watch?v=TCgXFpC7HS4)
+
+### Short Demo (v0.5.3)
+[![Demo](https://img.youtube.com/vi/nywHxAofsHw/0.jpg)](https://www.youtube.com/watch?v=nywHxAofsHw)

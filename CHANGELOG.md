@@ -2,6 +2,12 @@
 
 All project changes are documented here.
 
+## Version 0.7.3 (2026-04-04)
+
+### Fixes
+
+- Updated README.md
+
 ## Version 0.7.2 (2026-02-17)
 
 ### New features
